@@ -10,12 +10,11 @@ import { Col, Row } from 'react-bootstrap';
 function ViewBooks() {
   const dispatch = useDispatch();
   const books = useSelector((state) => state.bookReducer.books || []);
-  const searchTerm = useSelector((state) => state.bookReducer.searchTerm); // Get the search term from the store
+  const searchTerm = useSelector((state) => state.bookReducer.searchTerm);
   const [show, setShow] = useState(false);
   const [currentBook, setCurrentBook] = useState({ id: '', title: '', author: '' });
 
   const handleClose = () => setShow(false);
-
   const handleShow = (book) => {
     setCurrentBook(book);
     setShow(true);
@@ -36,31 +35,37 @@ function ViewBooks() {
   };
 
   const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="book-list d-flex">
-      {filteredBooks.length === 0 ? (
-        <p>No books available</p>
-      ) : (
-        filteredBooks.map((book) => (
-          <Card style={{ width: '18rem', margin: '10px' }} key={book.id} className='lg-6'>
-            <Card.Img variant="top" height={"150px"} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSScFmcQC37eboCHViQ8z3jXbDhaA2PaqnZnA&s" />
-            <Card.Body>
-              <Card.Title>{book.title}</Card.Title>
-              <Card.Text>Author: {book.author}</Card.Text>
-              <Button variant="primary" onClick={() => handleShow(book)}>
-                Edit
-              </Button>
-              <Button style={{ marginLeft: "120px" }} variant="danger" onClick={() => handleDeleteBook(book.id)}>
-                Delete
-              </Button>
-            </Card.Body>
-          </Card>
-        ))
-      )}
+    <div className="book-list">
+      <Row>
+        {filteredBooks.length === 0 ? (
+          <Col>
+            <p>No books available</p>
+          </Col>
+        ) : (
+          filteredBooks.map((book) => (
+            <Col xs={12} sm={6} md={4} lg={3} key={book.id} className='mb-3'>
+              <Card>
+                <Card.Img variant="top" height={"150px"} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSScFmcQC37eboCHViQ8z3jXbDhaA2PaqnZnA&s" />
+                <Card.Body>
+                  <Card.Title>{book.title}</Card.Title>
+                  <Card.Text>Author: {book.author}</Card.Text>
+                  <Button variant="primary" onClick={() => handleShow(book)}>
+                    Edit
+                  </Button>
+                  <Button style={{ marginLeft: "10px" }} variant="danger" onClick={() => handleDeleteBook(book.id)}>
+                    Delete
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))
+        )}
+      </Row>
 
       <Modal show={show} onHide={handleClose} className="custom-modal">
         <Modal.Header closeButton>
